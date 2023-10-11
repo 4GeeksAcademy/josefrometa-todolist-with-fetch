@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 //create your first component
@@ -9,6 +9,15 @@ const Home = () => {
 	//Savetask guarda las tareas en un array
 	const [saveTask, setSaveTask] = useState([]);
 
+	//Llamamos la Api con su usuario y la volvemos una promesa await
+	const getTask = async () => {
+		try {
+			let response = await fetch ('https://playground.4geeks.com/apis/fake/todos/user/josefrometa')
+			console.log(response)
+		} catch (error) {
+			console.log(error)
+		}
+	}
 	//Guarda lo que escribimos en el input (Usamos un objeto que verificamos en el navegador, el objeto es el eveto a partir del evento buscamos el valor)
 	function handleTask(event) {
 		setTask(event.target.value)
@@ -28,30 +37,34 @@ const Home = () => {
 		setSaveTask(filterTask)
 	}
 
-	function updateTodoList(update) {
-		//falta configurar la API 
-		fetch('https://playground.4geeks.com/apis/fake/todos/user/alesanchezr', {
-      method: "PUT",
-      body: JSON.stringify(todos),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(resp => {
-        console.log(resp.ok); // Será true (verdad) si la respuesta es exitosa.
-        console.log(resp.status); // el código de estado = 200 o código = 400 etc.
-        console.log(resp.text()); // Intentará devolver el resultado exacto como cadena (string)
-        return resp.json(); // (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
-    })
-    .then(data => {
-        //Aquí es donde debe comenzar tu código después de que finalice la búsqueda
-        console.log(data); //esto imprimirá en la consola el objeto exacto recibido del servidor
-    })
-    .catch(error => {
-        //manejo de errores
-        console.log(error);
-    });
-	}
+	useEffect (() => {
+		getTask()
+	}, [])
+		
+	// function updateTodoList(update) {
+	// 	//falta configurar la API 
+	// 	fetch('https://playground.4geeks.com/apis/fake/todos/user/josefrometa', {
+    //   method: "PUT",
+    //   body: JSON.stringify(todos),
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   }
+    // })
+    // .then(resp => {
+    //     console.log(resp.ok); // Será true (verdad) si la respuesta es exitosa.
+    //     console.log(resp.status); // el código de estado = 200 o código = 400 etc.
+    //     console.log(resp.text()); // Intentará devolver el resultado exacto como cadena (string)
+    //     return resp.json(); // (regresa una promesa) will try to parse the result as json as return a promise that you can .then for results
+    // })
+    // .then(data => {
+    //     //Aquí es donde debe comenzar tu código después de que finalice la búsqueda
+    //     console.log(data); //esto imprimirá en la consola el objeto exacto recibido del servidor
+    // })
+    // .catch(error => {
+    //     //manejo de errores
+    //     console.log(error);
+    // });
+	// }
 
 
 	return (
