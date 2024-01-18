@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+let URLbase = "https://playground.4geeks.com/apis/fake/todos/user/josefrometa"
 
 //create your first component
 const Home = () => {
@@ -12,15 +13,38 @@ const Home = () => {
 	//Llamamos la Api con su usuario y la volvemos una promesa await
 	const getTask = async () => {
 		try {
-			let response = await fetch("https://playground.4geeks.com/apis/fake/todos/user/josefrometa")
+			let response = await fetch(URLbase)
 
 			let data = await response.json()
 			console.log(data)
 			if (response.ok) {
 				setSaveTask(data)
 			}
+			if (response.status == 404) {
+				createUser()
+			}
+			console.log(response)
 
 			console.log(response)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+	const createUser = async () => {
+		try {
+			let response = await fetch(URLbase, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify([])
+			})
+
+			if (response.ok) {
+				getTask()
+			}
+
+			// console.log(response)
 		} catch (error) {
 			console.log(error)
 		}
@@ -37,14 +61,14 @@ const Home = () => {
 		if (event.key == "Enter") {
 			if (task.label.trim() !== "") {
 				try {
-					let response = await fetch("https://playground.4geeks.com/apis/fake/todos/user/josefrometa", {
+					let response = await fetch(URLbase, {
 						method: "PUT",
-						headers: { 
-							"Content-Type":"application/json"
-						 },
-						 body: JSON.stringify([...saveTask, task])
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify([...saveTask, task])
 					})
-					if (response.ok){
+					if (response.ok) {
 						getTask()
 					}
 				} catch (error) {
@@ -57,21 +81,54 @@ const Home = () => {
 	async function handleDelete(index) {
 		let filterTask = saveTask.filter((item, indexFilter) => index !== indexFilter)
 		try {
-			let response = await fetch("https://playground.4geeks.com/apis/fake/todos/user/josefrometa", {
-						method: "PUT",
-						headers: { 
-							"Content-Type":"application/json"
-						 },
-						 body: JSON.stringify(filterTask)
-					})
-					if (response.ok){
-						getTask()
-					}	
+			let response = await fetch(URLbase, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(filterTask)
+			})
+			if (response.ok) {
+				getTask()
+			}
 		} catch (error) {
 			console.log(error)
 		}
 	}
 
+	// const handleDeleteAll = async () => {
+	// 	try {
+	// 		let response = await fetch(URLbase, {
+	// 			method: "DELETE",
+	// 			headers: {
+	// 				"Content-Type": "application/json"
+	// 			}
+	// 		})
+	// 		if (response.ok) {
+	// 			getTask()
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error)
+	// 	}
+
+	// }
+
+	const handleDeleteAll = async () => {
+		try {
+			let response = await fetch(URLbase, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			})
+			if (response.ok) {
+				setSaveTask([]); // Establece manualmente saveTask a un array vacío
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+	
 	useEffect(() => {
 		getTask()
 	}, [])
@@ -101,6 +158,7 @@ const Home = () => {
 					<p className="text-secondary ">
 						{saveTask.length > 0 ? `There are ${saveTask.length} task.` : `There are no task`}
 					</p>
+					<button className="btn btn-danger" onClick={handleDeleteAll}> Eliminar todas las tareas</button>
 				</div>
 			</div>
 
