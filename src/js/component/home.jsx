@@ -96,23 +96,6 @@ const Home = () => {
 		}
 	}
 
-	// const handleDeleteAll = async () => {
-	// 	try {
-	// 		let response = await fetch(URLbase, {
-	// 			method: "DELETE",
-	// 			headers: {
-	// 				"Content-Type": "application/json"
-	// 			}
-	// 		})
-	// 		if (response.ok) {
-	// 			getTask()
-	// 		}
-	// 	} catch (error) {
-	// 		console.log(error)
-	// 	}
-
-	// }
-
 	const handleDeleteAll = async () => {
 		try {
 			let response = await fetch(URLbase, {
@@ -128,7 +111,7 @@ const Home = () => {
 			console.log(error)
 		}
 	}
-	
+
 	useEffect(() => {
 		getTask()
 	}, [])
@@ -158,7 +141,9 @@ const Home = () => {
 					<p className="text-secondary ">
 						{saveTask.length > 0 ? `There are ${saveTask.length} task.` : `There are no task`}
 					</p>
-					<button className="btn btn-danger" onClick={handleDeleteAll}> Eliminar todas las tareas</button>
+					<div className="d-flex justify-content-center">
+						<button className="btn btn-danger d-flex justify-content-center" onClick={handleDeleteAll}> Eliminar todas las tareas</button>
+					</div>
 				</div>
 			</div>
 
